@@ -23,8 +23,16 @@ public class Map {
     }
 
     //METHODS
-    public void changeMapItem(IMapItem mapItem) {
-        map[mapItem.getLocation().x()][mapItem.getLocation().y()] = mapItem;
+    public void changeLocation(IMapItem mapItem, Location newLocation) {
+        Location previousLocation = mapItem.getLocation();
+        mapItem.setLocation(newLocation);
+        map[newLocation.x()][newLocation.y()] = mapItem;
+        map[previousLocation.x()][previousLocation.y()] = new DefaultMapItem(previousLocation);
+    }
+
+    public void setUpLocation(IMapItem mapItem) {
+        Location location = mapItem.getLocation();
+        map[location.x()][location.y()] = mapItem;
     }
 
     public IMapItem getMapItem(Location location) {
@@ -38,18 +46,19 @@ public class Map {
             for (int j = 0; j < map[0].length; j++) {
                 System.out.printf("%s  ", map[j][i].getSymbol());
             }
-            System.out.println("\n");
+            System.out.println("");
         }
+        System.out.println();
     }
 
     public void initialiseMap() {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
                 if (i == 0 || j == 0 || i == map.length - 1 || j == map.length - 1) {
-                    changeMapItem(new Wall(new Location(i,j)));
+                    setUpLocation(new Wall(new Location(i,j)));
                 }
                 else {
-                    changeMapItem(new DefaultMapItem((new Location(i,j))));
+                    setUpLocation(new DefaultMapItem((new Location(i,j))));
                 }
             }
         }

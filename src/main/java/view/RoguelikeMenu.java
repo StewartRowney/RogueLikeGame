@@ -50,7 +50,7 @@ public class RoguelikeMenu {
 
         //todo sort user inputs
 
-        Player player = new Player("name", 'T', new Location(0,0));
+        Player player = new Player("name", 'P', new Location(0,0));
         RoguelikeGame game = new RoguelikeGame(player, Difficulty.values()[2], 10);
         game.run();
     }
