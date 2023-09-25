@@ -3,7 +3,6 @@ package view;
 import models.Location;
 import models.enums.Difficulty;
 import models.mapitems.Player;
-import models.mapitems.Wall;
 import service.RoguelikeGame;
 
 import java.util.Scanner;
@@ -46,7 +45,7 @@ public class RoguelikeMenu {
         char symbol = validateCharInput();
         System.out.print("Enter Difficulty (0 - easy, 1 - medium, 2 - hard, 3 - legendary): ");
         int difficulty = validateDifficulty();
-        System.out.print("Enter map size (min 5, max 25): ");
+        System.out.print("Enter map size (min 8, max 20): ");
         int mapSize = validateMapSize();
 
         Player player = new Player(name, symbol, new Location(0,0));
@@ -100,7 +99,7 @@ public class RoguelikeMenu {
     }
     private int validateMapSize() {
         int number = validateIntInput();
-        if (number < 5 || number > 25) {
+        if (number < 8 || number > 20) {
             System.out.print("Input a valid number\nTry again: ");
             return validateDifficulty();
         }

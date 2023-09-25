@@ -51,15 +51,15 @@ public class RoguelikeGame {
         createZombies();
     }
     public void setUpPlayer() {
-        player.setLocation(map.selectRandomFreeLocation());
+        player.setLocation(new Location(2,2));
         map.setUpLocation(player);
     }
     public void createFinishPoint() {
-        FinishPoint finishPoint = new FinishPoint(map.selectRandomFreeLocation());
+        FinishPoint finishPoint = new FinishPoint(new Location(map.getSize() - 3, map.getSize() - 3));
         map.setUpLocation(finishPoint);
     }
     public void createZombies() {
-        int number = (difficulty.ordinal() + 1) * 3;
+        int number = (difficulty.ordinal() + 1) * (map.getSize() - 4)/2;
         for (int i = 0; i < number; i++) {
             Zombie zombie = new Zombie(map.selectRandomFreeLocation());
             zombies.add(zombie);

@@ -46,7 +46,7 @@ public class Map {
             for (int j = 0; j < map[0].length; j++) {
                 System.out.printf("%s  ", map[j][i].getSymbol());
             }
-            System.out.println("");
+            System.out.println();
         }
         System.out.println();
     }
@@ -72,6 +72,8 @@ public class Map {
         while (!success) {
             int x = random.nextInt(size - 2) + 1;
             int y = random.nextInt(size - 2) + 1;
+
+            if (x < 5 && y < 5) continue;
 
             if (map[x][y].getClass() == DefaultMapItem.class) {
                 location = new Location( x, y);
