@@ -3,6 +3,7 @@ package view;
 import models.Location;
 import models.enums.Difficulty;
 import models.mapitems.Player;
+import models.mapitems.Wall;
 import service.RoguelikeGame;
 
 import java.util.Scanner;
@@ -38,20 +39,18 @@ public class RoguelikeMenu {
         }
     }
     public void playGame() {
-//        createHeading("Roguelike Game");
-//        System.out.print("Enter Name: ");
-//        String name = scanner.nextLine();
-//        System.out.print("Enter Character Symbol: ");
-//        char symbol = validateCharInput();
-//        System.out.print("Enter Difficulty (0 - easy, 1 - medium, 2 - hard, 3 - legendary): ");
-//        int difficulty = validateIntInput();
-//        System.out.print("Enter map size: ");
-//        int mapSize = validateIntInput();
+        createHeading("Roguelike Game");
+        System.out.print("Enter Name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter Character Symbol (Cannot be X,Z,* or -: ");
+        char symbol = validateCharInput();
+        System.out.print("Enter Difficulty (0 - easy, 1 - medium, 2 - hard, 3 - legendary): ");
+        int difficulty = validateDifficulty();
+        System.out.print("Enter map size (min 5, max 25): ");
+        int mapSize = validateMapSize();
 
-        //todo sort user inputs
-
-        Player player = new Player("name", 'P', new Location(0,0));
-        RoguelikeGame game = new RoguelikeGame(player, Difficulty.values()[2], 10);
+        Player player = new Player(name, symbol, new Location(0,0));
+        RoguelikeGame game = new RoguelikeGame(player, Difficulty.values()[difficulty], mapSize);
         game.run();
     }
 
@@ -85,18 +84,45 @@ public class RoguelikeMenu {
             return Integer.parseInt(input);
         }
         catch (NumberFormatException nFE) {
-            System.out.println("Input a valid option from the menu");
+            System.out.print("Input a valid option from the menu\nTry again: ");
             return validateIntInput();
+        }
+    }
+    private int validateDifficulty() {
+        int number = validateIntInput();
+        if (number < 0 || number > 3) {
+            System.out.print("Input a valid number\nTry again: ");
+            return validateDifficulty();
+        }
+        else {
+            return number;
+        }
+    }
+    private int validateMapSize() {
+        int number = validateIntInput();
+        if (number < 5 || number > 25) {
+            System.out.print("Input a valid number\nTry again: ");
+            return validateDifficulty();
+        }
+        else {
+            return number;
         }
     }
     private char validateCharInput() {
         String input = scanner.nextLine();
 
         if (input.length() == 1) {
-            return input.charAt(0);
+            char inputChar = input.charAt(0);
+            if (inputChar == 'X' || inputChar == 'Z' || inputChar == '-' || inputChar == '*') {
+                System.out.print("Input a valid character\nTry again: ");
+                return validateCharInput();
+            }
+            else {
+                return inputChar;
+            }
         }
         else {
-            System.out.println("Input a single character");
+            System.out.println("Input a single character\nTry again: ");
             return validateCharInput();
         }
     }

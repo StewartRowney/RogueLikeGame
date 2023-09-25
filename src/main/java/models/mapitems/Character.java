@@ -36,11 +36,4 @@ public class Character implements IMapItem {
         this.location = location;
     }
 
-    //METHODS
-    public Location move(Direction direction) {
-        Location newLocation = direction.getNextLocation(location, speed);
-        location = newLocation;
-        return location;
-    }
-
 }

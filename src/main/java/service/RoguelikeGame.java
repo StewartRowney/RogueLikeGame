@@ -1,5 +1,6 @@
 package service;
 
+import models.GameStatus;
 import models.Location;
 import models.Map;
 import models.enums.Difficulty;
@@ -20,7 +21,7 @@ public class RoguelikeGame {
     private final Map map;
     private final Scanner scanner = new Scanner(System.in);
     private final ArrayList<Zombie> zombies = new ArrayList<>();
-    private boolean gameFinished = false;
+    private final GameStatus gameFinished = new GameStatus();
 
     public RoguelikeGame(Player player, Difficulty difficulty, int mapSize) {
         this.player = player;
@@ -30,14 +31,15 @@ public class RoguelikeGame {
 
     public void run() {
         gameSetUp();
-        while (!gameFinished) {
+        while (!gameFinished.getGameFinished()) {
             playerMove();
+            moveZombies();
             map.printMapToConsole();
         }
+        System.out.println(gameFinished.getMessage());
     }
 
     private void gameSetUp() {
-        gameFinished = false;
         map.initialiseMap();
         setUpCharacters();
         map.printMapToConsole();
@@ -65,6 +67,28 @@ public class RoguelikeGame {
         }
     }
 
+    public void moveZombies() {
+        for (Zombie zombie : zombies) {
+            tryMoveZombie(zombie);
+        }
+    }
+
+    public void tryMoveZombie(Zombie zombie) {
+        Direction direction = Direction.selectRandomDirection();
+        Location targetLocation = direction.getNextLocation(zombie.getLocation(), zombie.getSpeed());
+        if (map.getMapItem(targetLocation).getClass() == Player.class) {
+            gameFinished.setMessage("****YOU LOSE****\nYou were eaten by a zombie\nBetter luck next time " + player.getName());
+            gameFinished.finishGame();
+            map.changeLocation(zombie, targetLocation);
+        }
+        else if (map.getMapItem(targetLocation).getClass() != DefaultMapItem.class) {
+            tryMoveZombie(zombie);
+        }
+        else {
+            map.changeLocation(zombie, targetLocation);
+        }
+    }
+
     private void playerMove() {
         Direction playerDirection = validatePlayerMove();
         Location newLocation = playerDirection.getNextLocation(player.getLocation(), player.getSpeed());
@@ -75,12 +99,9 @@ public class RoguelikeGame {
         Direction playerDirection = promptPlayerForMove();
         Location targetLocation = playerDirection.getNextLocation(player.getLocation(), player.getSpeed());
 
-        System.out.println(player.getLocation());
-        System.out.println(playerDirection.getNextLocation(player.getLocation(), 1));
-
         if (map.getMapItem(targetLocation).getClass() == FinishPoint.class) {
-            gameFinished = true;
-            System.out.println("You win.");
+            gameFinished.finishGame();
+            gameFinished.setMessage("****YOU WIN****\nCongratulations " + player.getName());
             return playerDirection;
         }
         else if (map.getMapItem(targetLocation).getClass() != DefaultMapItem.class) {
