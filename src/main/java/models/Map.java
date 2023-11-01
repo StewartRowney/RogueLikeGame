@@ -66,6 +66,7 @@ public class Map {
 
     public Location selectRandomFreeLocation() {
         boolean success = false;
+
         Location location = new Location(0, 0);
         Random random = new Random();
 
@@ -82,5 +83,4 @@ public class Map {
         }
         return location;
     }
-
 }

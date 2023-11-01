@@ -99,10 +99,14 @@ public class RoguelikeGame {
         Direction playerDirection = promptPlayerForMove();
         Location targetLocation = playerDirection.getNextLocation(player.getLocation(), player.getSpeed());
 
-        if (map.getMapItem(targetLocation).getClass() == FinishPoint.class) {
+        if (map.getMapItem(targetLocation) instanceof FinishPoint) {
             gameFinished.finishGame();
             gameFinished.setMessage("****YOU WIN****\nCongratulations " + player.getName());
             return playerDirection;
+        }
+        else if (map.getMapItem(targetLocation) instanceof Zombie zombie) {
+            zombies.remove(zombie);
+            System.out.println("You have slain a zombie");
         }
         else if (map.getMapItem(targetLocation).getClass() != DefaultMapItem.class) {
             System.out.println("Space is already taken, try again");
